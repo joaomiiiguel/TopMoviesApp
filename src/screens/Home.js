@@ -5,7 +5,7 @@ import { Text, View } from 'react-native';
 export default function Home() {
     return (
         <View style={globalStyle.container}>
-            <Text style={globalStyle.title}>Home</Text>
+            <Text style={globalStyle.title}>Home Page</Text>
         </View>
     )
 }

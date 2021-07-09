@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { Text, View } from 'react-native';
+import { Text, View, Image } from 'react-native';
 import { globalStyle, theme } from './src/globalStyle';
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
@@ -11,9 +11,9 @@ import Home from './src/screens/Home'
 import TopMovies from './src/screens/TopMovies'
 import Trailers from './src/screens/Trailers'
 import Statistics from './src/screens/Statistics'
+import Detail from './src/screens/Detail'
 
 
-//const Stack = createStackNavigator();
 const Tab = createMaterialTopTabNavigator();
 
 export default function App() {
@@ -21,6 +21,7 @@ export default function App() {
  
   return (
     <NavigationContainer>
+      
       <Tab.Navigator
         initialRouteName="TopMovies"
         headerMode="none"
@@ -59,6 +60,8 @@ export default function App() {
               <Icon name="stats-chart" color={color} size={23} />
             ),
           }} />
+        <Tab.Screen name="Detail" component={Detail}/>
+
       </Tab.Navigator>
       <StatusBar style="auto" />
     </NavigationContainer>

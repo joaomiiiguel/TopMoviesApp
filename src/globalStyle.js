@@ -19,6 +19,34 @@ export const globalStyle = StyleSheet.create({
         fontWeight: 'bold',
         color: '#FFF',
     },
+    inputSearch: {
+        color: '#fff',
+        marginRight: 5
+    },
+    Capa: {
+        width: '40%',
+        height: '100%',
+        borderBottomLeftRadius: 8,
+        borderTopLeftRadius: 8,
+    },
+    containerMovie: {
+        width: '50%',
+        margin: 15,
+        justifyContent: 'space-between'
+    },
+    titleMovie: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        color: '#FFF',
+    },
+    genreMovie: {
+        fontSize: 12,
+        color: '#FFF',
+    },
+    yearMovie: {
+        fontSize: 12,
+        color: '#FFF',
+    },
 })
 
 export const theme = {
