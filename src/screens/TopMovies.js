@@ -3,29 +3,62 @@ import { globalStyle, theme } from '../globalStyle'
 import { Text, View, FlatList, TextInput, TouchableOpacity, Image } from 'react-native';
 import api from '../../src/services/api'
 import Icon from 'react-native-vector-icons/Ionicons';
+import { useNavigation } from '@react-navigation/native'
+
+import CardMovie from '../components/CardMovie';
+import Loading from '../components/Loading';
+
+import HomeIcon from '../../assets/home.png'
+import TopIcon from '../../assets/topmovies.png'
+import TrailerIcon from '../../assets/trailer.png'
+import StatisticsIcon from '../../assets/statistics.png'
 
 
-import RatedStars from '../components/ratedStars';
+export default function TopMovies() {
+    const [movies, setMovies] = useState()
+    const navigation = useNavigation();
+    const [pageCurrent, setPageCurrent] = useState(1)
+    const [loading, setLoading] = useState(true)
 
-export default function TopMovies({ route, navigation }) {
-    const [movies, setMovies] = useState([])
-
+    const API_KEY = 'e621417c4c3e28d4f82b09dcfcb5ee23'
+    const API_LING = 'pt-BR'
+    
+    //Carrega as informações da API
     async function loadMovies() {
-        const response = await api.get('/top_rated?api_key=e621417c4c3e28d4f82b09dcfcb5ee23&language=pt-BR&page=1')
+        const listTopMovie = `/movie/top_rated?api_key=${API_KEY}&language=${API_LING}&page=${pageCurrent}`
+        const response = await api.get(listTopMovie)
         setMovies(response.data.results)
+        
     }
-
-
+   
 
     useEffect(() => {
         loadMovies();
-
+        setLoading(false)
     }, [])
 
+    function ListMovie() {
+        return (
+            <FlatList
+                data={movies}
+                showsVerticalScrollIndicator={false}
+                keyExtractor={movie => String(movie.id)}
+                renderItem={({ item: movie }) => (
+                    <CardMovie
+                        title={movie.title}
+                        genre_ids={movie.genre_ids}
+                        release_date={movie.release_date}
+                        vote_average={movie.vote_average}
+                        poster_path={movie.poster_path}
+                        movie={movie} />
+                )}
+            />
+        )
+    }
 
     return (
         <View style={globalStyle.container}>
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginVertical: 5 }}>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginVertical: 5, marginHorizontal: 25, }}>
                 <Text style={globalStyle.title}>Top Movies</Text>
                 <View style={{ flexDirection: 'row', width: '50%', justifyContent: 'flex-end', alignItems: 'center' }}>
                     <TextInput
@@ -39,24 +72,16 @@ export default function TopMovies({ route, navigation }) {
                 </View>
             </View>
 
-            <FlatList
-                data={movies}
-                showsVerticalScrollIndicator={false}
-                keyExtractor={movie => String(movie.id)}
-                renderItem={() => (
-                    <TouchableOpacity style={globalStyle.container} onPress={() => navigationtoDetail(idPress)}>
-                        <Image source={{ uri: `https://image.tmdb.org/t/p/original${poster_path}` }} style={globalStyle.Capa} />
-                        <View style={globalStyle.containerMovie}>
-                            <View>
-                                <Text style={globalStyle.titleMovie}>{title}</Text>
-                                <Text style={globalStyle.genreMovie}>{genre_ids}</Text>
-                                <Text style={globalStyle.yearMovie}>{release_date}</Text>
-                            </View>
-                            <RatedStars valueRated={valueRated} />
-                        </View>
+            {(loading == true) ?  <Loading/> :  <ListMovie />}
 
-                    </TouchableOpacity>
-                )} />
+            <View style={globalStyle.tabar}>
+                <TouchableOpacity style={globalStyle.btnTabar}><Image source={HomeIcon} style={{ width: 20, height: 20 }} /></TouchableOpacity>
+                <TouchableOpacity style={globalStyle.btnTabar}><Image source={TopIcon} style={{ width: 20, height: 20 }} /></TouchableOpacity>
+                <TouchableOpacity style={globalStyle.btnTabar}><Image source={TrailerIcon} style={{ width: 20, height: 20 }} /></TouchableOpacity>
+                <TouchableOpacity style={globalStyle.btnTabar}><Image source={StatisticsIcon} style={{ width: 20, height: 20 }} /></TouchableOpacity>
+            </View>
+
+
         </View>
     )
 }

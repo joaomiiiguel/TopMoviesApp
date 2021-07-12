@@ -3,11 +3,10 @@ import { StyleSheet, StatusBar } from 'react-native';
 
 
 export const globalStyle = StyleSheet.create({
-    
+
     container: {
         flex: 1,
         backgroundColor: '#070818',
-        paddingHorizontal: 25,
         paddingTop: StatusBar.currentHeight + 20
     },
     containerSecundary: {
@@ -29,6 +28,22 @@ export const globalStyle = StyleSheet.create({
         borderBottomLeftRadius: 8,
         borderTopLeftRadius: 8,
     },
+    containerCard: {
+        height: 160,
+        marginBottom: 15,
+        flexDirection: 'row',
+        backgroundColor: '#1B1C2A',
+        borderRadius: 8,
+        marginHorizontal: 25,
+    },
+    containerCard1: {
+        height: 160,
+        marginBottom: 15,
+        flexDirection: 'row',
+        backgroundColor: '#007CFF',
+        borderRadius: 8,
+        marginHorizontal: 25,
+    },
     containerMovie: {
         width: '50%',
         margin: 15,
@@ -47,6 +62,14 @@ export const globalStyle = StyleSheet.create({
         fontSize: 12,
         color: '#FFF',
     },
+    tabar: {
+        height: 50,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        paddingVertical: 10,
+        paddingHorizontal: 30,
+        backgroundColor: '#1B1C2A',
+    }
 })
 
 export const theme = {
