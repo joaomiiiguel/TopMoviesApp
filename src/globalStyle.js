@@ -13,7 +13,7 @@ export const globalStyle = StyleSheet.create({
         flex: 3,
     },
     title: {
-        fontSize: 32,
+        fontSize: '1.8rem',
         lineHeight: 48,
         fontWeight: 'bold',
         color: '#FFF',
@@ -34,15 +34,14 @@ export const globalStyle = StyleSheet.create({
         flexDirection: 'row',
         backgroundColor: '#1B1C2A',
         borderRadius: 8,
-        marginHorizontal: 25,
     },
     containerCard1: {
         height: 160,
+        width: '100%',
         marginBottom: 15,
         flexDirection: 'row',
         backgroundColor: '#007CFF',
         borderRadius: 8,
-        marginHorizontal: 25,
     },
     containerMovie: {
         width: '50%',
@@ -72,6 +71,7 @@ export const globalStyle = StyleSheet.create({
     }
 })
 
+//Color palette
 export const theme = {
     colors: {
         BlueBase: '#007CFF',

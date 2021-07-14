@@ -8,33 +8,48 @@ import { LinearGradient } from 'expo-linear-gradient';
 import api from '../services/api';
 import CardMovie from '../components/CardMovie';
 import Loading from '../components/Loading';
+import '../../global'; //Global Values
+
 
 export default function Detail() {
     const navigation = useNavigation();
     const route = useRoute();
-    const movie = route.params.movie
-    const [movieDetail, setMovieDetail] = useState(null)
-    const [movieRecom, setMovieRecom] = useState(null)
-    const [loading, setLoading] = useState(true)
+    const movie = route.params.movie //Values from previous page
+    const [movieDetail, setMovieDetail] = useState(null) //Values from detail of the movie selected
+    const [movieRecom, setMovieRecom] = useState(null) //List of recommended movies for a movie selected.
+    const [loading, setLoading] = useState(true) //Loadgin State
 
-    const API_KEY = 'e621417c4c3e28d4f82b09dcfcb5ee23'
-    const API_LING = 'pt-BR'
 
+    //Load API information
     async function loadMoviesDetail() {
-        const ApiDetail = `/movie/${movie.id}?api_key=api_key=e621417c4c3e28d4f82b09dcfcb5ee23&language=pt-BR`
-        //const ApiRecom = `/movie/${movie.id}/recommendations?api_key=e621417c4c3e28d4f82b09dcfcb5ee23&language=pt-BR&page=1`
-        const response = await api.get(ApiDetail)
-        //const responseRecom = await api.get(ApiRecom)
-        setMovieDetail(response.data)
-        console.log(response.data)
-        //setMovieRecom(responseRecom.data)
-                
-    }
+        const ApiDetail = `/movie/${movie.id}?api_key=${API_KEY}&language=${API_LANG}`
+        await api.get(ApiDetail)
+            .then(response => {
+                console.log(response.data)
+                setMovieDetail(response.data)
+            }, error => {
+                console.log(error)
+            });
 
+
+
+    }
+//Load Recommended movies
+    async function loadMoviesRecommends() {
+        const ApiRecom = `/movie/${movie.id}/recommendations?api_key=${API_KEY}&language=${API_LANG}&page=1`
+        await api.get(ApiRecom)
+            .then(responseRecom => {
+                console.log(responseRecom.data.results)
+                setMovieRecom(responseRecom.data.results)
+            }, error => {
+                console.log(error)
+            });
+    }
+//Get list of genres of movie selected
     function getMoviesGenres(genres) {
         let genresString = ''
         genres?.forEach(genre => {
-            genresString += genre.name + " "
+            genresString += genre.name + ", "
         });
         return genresString
 
@@ -42,20 +57,21 @@ export default function Detail() {
 
     useEffect(() => {
         loadMoviesDetail();
+        loadMoviesRecommends();
         setLoading(false)
-    })
+    }, [])
 
 
     function CardMovieDetail() {
         return (
-            <View style={styles.container}>
-                <Image source={{ uri: `https://image.tmdb.org/t/p/original${movie.backdrop_path}` }} style={styles.capaDetail} />
+            <ScrollView style={styles.container}>
+                <Image source={{ uri: `https://image.tmdb.org/t/p/w780${movie.backdrop_path}` }} style={styles.capaDetail} />
 
                 <TouchableOpacity style={styles.topBack} onPress={() => navigation.goBack()}><Icon name="arrow-back-outline" color={'#fff'} size={25} /></TouchableOpacity>
-                
+
                 <LinearGradient
                     style={styles.containerDetail}
-                    end={[0, 0.5]}
+                    end={[0, 0.2]}
                     colors={['transparent', theme.colors.BlackBase]}>
 
                     <Text style={globalStyle.title}>{movie.title}</Text>
@@ -63,24 +79,25 @@ export default function Detail() {
                     <Text style={styles.overviewMovie}>{movie.overview}</Text>
                     <RatedStars valueRated={movie.vote_average} />
                     <View>
-                        <Text style={globalStyle.title}>Also trending</Text>
+                        <Text style={styles.subtitle}>Also trending</Text>
                         <FlatList
                             data={movieRecom}
                             showsVerticalScrollIndicator={false}
                             keyExtractor={item => String(item.id)}
+                            initialNumToRender={5}
                             renderItem={({ item }) => (
                                 <CardMovie
                                     title={item.title}
-                                    genre_ids={item?.genre_ids}
-                                    release_date={item?.release_date}
-                                    vote_average={item?.vote_average}
-                                    poster_path={item?.poster_path}
+                                    genre_ids={item.genre_ids}
+                                    release_date={item.release_date}
+                                    vote_average={item.vote_average}
+                                    poster_path={item.poster_path}
                                     movie={item} />
                             )}
                         />
                     </View>
                 </LinearGradient>
-            </View>
+            </ScrollView>
         )
     }
     if (loading == true) {
@@ -102,15 +119,15 @@ const styles = StyleSheet.create({
     },
     capaDetail: {
         width: '100%',
-        height: '60%',
+        height: 500,
         opacity: 0.5
     },
     containerDetail: {
-        marginTop: '-60%',
+        marginTop: -200,
         paddingTop: 50,
         paddingLeft: 60,
         paddingRight: 30,
-        height: 300
+        height: 200
     },
     topBack: {
         position: 'absolute',
@@ -121,5 +138,11 @@ const styles = StyleSheet.create({
     overviewMovie: {
         paddingVertical: 15,
         color: '#FFF'
+    },
+    subtitle: {
+        fontSize: 24,
+        marginTop: 40,
+        marginBottom: 15,
+        color: 'white',
     }
 })
